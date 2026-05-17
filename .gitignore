@@ -55,3 +55,43 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Visual Studio / IDE
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.VC.db
+*.VC.opendb
+
+# C/C++ intermediate build artifacts
+*.obj
+*.iobj
+*.ipdb
+*.idb
+*.ilk
+*.pdb
+*.tlog
+*.lastbuildstate
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pytest_cache/
+.venv/
+venv/
+
+# Local tooling/runtime state
+.dotnet/
+guardian/.chrome-tmp*/
+guardian/cache/
+guardian/quarantine/
+guardian/tmp/
+guardian/sandbox_config.json
+
+# Dotenv variants
+.env.*
+!.env.example
