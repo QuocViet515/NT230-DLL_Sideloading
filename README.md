@@ -1,143 +1,143 @@
-# NT230 - DLL Side-Loading (`winmm.dll`) Detection Lab
+# NT230 - Phòng thí nghiệm phát hiện DLL Side-Loading (`winmm.dll`)
 
-## Luu y an toan
-Du an nay phuc vu muc dich hoc tap nghien cuu va xay dung phong thu trong moi truong lab co kiem soat.  
-Khong su dung mau PoC de trien khai tren he thong that.
+## Lưu ý an toàn
+Dự án này phục vụ mục đích học tập, nghiên cứu và xây dựng phòng thủ trong môi trường lab có kiểm soát.
+Không sử dụng bản PoC để triển khai trên hệ thống thật.
 
-## Tong quan nhanh
-Repo gom 2 khoi chinh:
+## Tổng quan nhanh
+Repository gồm hai phần chính:
 
-- `Dll1/`: mau DLL PoC mo phong ky thuat DLL side-loading qua ten `winmm.dll`.
-- `guardian/`: cong cu giam sat + phat hien + chan mau nghiem ngo theo rule/scoring.
-
----
-
-## 1) Tong quan DLL PoC (side-load qua `winmm.dll`)
-
-Mau DLL trong `Dll1` duoc thiet ke theo huong **proxy DLL**:
-
-- Xuat ra nhieu export tuong thich voi `winmm.dll` de ung dung host van tiep tuc chay.
-- Co them export dac trung nhu `DllRegisterServer` va `RunMalware`.
-- Khi DLL duoc nap (`DLL_PROCESS_ATTACH`), code khoi dong worker de chay logic chinh va tao dau vet persistence.
-
-Hanh vi chinh quan sat duoc tu source:
-
-1. Tai payload da ma hoa trong `payload_hex.c`.
-2. Giai ma payload trong bo nho (AES-CBC), doi quyen trang nho (`NtProtectVirtualMemory`/`VirtualProtect`) va thuc thi trong memory.
-3. Tao persistence bang cach:
-   - copy DLL sang `%TEMP%` (ten nhu `SysUpdateCore.dll`),
-   - tao script VBS launcher (vi du `SystemUpdate.vbs`, `SysCheck.vbs`),
-   - kich hoat chuoi goi qua `rundll32`.
-
-Muc tieu cua phan nay trong bai toan la tao mau hanh vi side-loading de danh gia bo quy tac phat hien.
+- `Dll1/`: mẫu DLL PoC mô phỏng kỹ thuật DLL side-loading với tên `winmm.dll`.
+- `guardian/`: công cụ giám sát, phát hiện và chặn mã độc mẫu theo cơ chế rule/score.
 
 ---
 
-## 2) Cong cu `guardian` phat hien nhu the nao
+## 1) Tổng quan mẫu DLL PoC (side-load qua `winmm.dll`)
 
-`guardian` dung mo hinh **rule + score** va co 3 lop phat hien bo tro nhau:
+Mẫu DLL trong `Dll1` được thiết kế theo kiểu **proxy DLL**:
 
-## Lop A - File-level detection (static/behavioral IOC)
+- Export nhiều hàm tương thích với `winmm.dll` để ứng dụng host vẫn tiếp tục hoạt động.
+- Có thêm export đặc trưng như `DllRegisterServer` và `RunMalware`.
+- Khi DLL được nạp (`DLL_PROCESS_ATTACH`), code khởi động một worker để chạy logic chính và tạo dấu vết persistence.
 
-File chinh: `guardian/guardian.py`
+Hành vi chính quan sát được từ mã nguồn:
 
-- Theo doi realtime thu muc bang `ReadDirectoryChangesW`.
-- Scan cac dinh dang ung vien: `.dll`, `.exe`, `.vbs`, `.cmd`, `.zip`, ...
-- Trich xuat va cham diem theo nhieu tin hieu:
-  - hash trung `known_sha256` (+120),
-  - ten file nghi ngo (+40),
-  - string IOC trong binary (+diem theo so luong),
-  - critical string groups (vd `rundll32 + runmalware + systemupdate.vbs`) (+40/group),
+1. Tải payload đã mã hóa trong `payload_hex.c`.
+2. Giải mã payload trong bộ nhớ (AES-CBC), thay đổi quyền trang nhớ (`NtProtectVirtualMemory`/`VirtualProtect`) và thực thi trong memory.
+3. Tạo persistence bằng cách:
+   - sao chép DLL sang `%TEMP%` (tên ví dụ `SysUpdateCore.dll`),
+   - tạo script VBS launcher (ví dụ `SystemUpdate.vbs`, `SysCheck.vbs`),
+   - kích hoạt chuỗi gọi qua `rundll32`.
+
+Mục tiêu của phần này là tạo mẫu hành vi side-loading để đánh giá bộ quy tắc phát hiện.
+
+---
+
+## 2) Công cụ `guardian` phát hiện như thế nào
+
+`guardian` dùng mô hình **rule + score** và có 3 lớp phát hiện bổ trợ nhau:
+
+### Lớp A - Phát hiện ở mức file (static/behavioral IOC)
+
+File chính: `guardian/guardian.py`
+
+- Theo dõi realtime thư mục bằng `ReadDirectoryChangesW`.
+- Quét các định dạng ứng viên: `.dll`, `.exe`, `.vbs`, `.cmd`, `.zip`, ...
+- Trích xuất và chấm điểm theo nhiều tín hiệu:
+  - hash trùng với `known_sha256` (+120),
+  - tên file đáng ngờ (+40),
+  - chuỗi IOC trong binary (cộng điểm theo số lượng),
+  - nhóm chuỗi quan trọng (ví dụ `rundll32 + runmalware + systemupdate.vbs`) (+40/nhóm),
   - pattern export proxy `winmm` (>= `min_winmm_export_matches`) (+60),
-  - cap export `RunMalware + DllRegisterServer` (+25).
-- Co allowlist chu ky: file Microsoft signed hop le co the duoc ha uu tien (score = 0).
-- Ho tro scan `.zip` de bat DLL nghi ngo nam ben trong archive.
+  - cặp export `RunMalware + DllRegisterServer` (+25).
+- Có allowlist chữ ký: file được Microsoft ký hợp lệ có thể được ưu tiên (score = 0).
+- Hỗ trợ quét `.zip` để phát hiện DLL nằm bên trong archive.
 
-Mac dinh, file dat `score >= block_threshold` (trong `rules.json`, hien tai la `70`) se bi xem la malicious.
+Mặc định, file đạt `score >= block_threshold` (trong `rules.json`, hiện tại là `70`) sẽ được coi là malicious.
 
-## Lop B - Runtime process va registry correlation
+### Lớp B - Tương quan tiến trình (process) và registry thời gian chạy
 
-Cac module chinh:
+Các module chính:
 
 - `guardian/process_scanner.py`
 - `guardian/registry_scanner.py`
 - `guardian/technique_mapper.py`
 
-Process scanner tap trung vao chain side-loading:
+Process scanner tập trung vào chuỗi side-loading:
 
-- Theo doi host process profile (mac dinh Notepad++: `notepad++.exe`, `npp.exe`).
-- Kiem tra module `winmm.dll` duoc nap tu dau:
-  - dung duong dan he thong hay khong,
-  - co nam trong user-writable path hay khong,
-  - chu ky co hop le/Microsoft hay khong.
-- Bat cac commandline co IOC (`rundll32`, `runmalware`, `sysupdatecore.dll`, ...).
-- Co the bo sung VT enrichment (tuy chon) de tang diem neu file/module bi engine ben ngoai danh dau.
+- Theo dõi profile process host (mặc định Notepad++: `notepad++.exe`, `npp.exe`).
+- Kiểm tra module `winmm.dll` được nạp từ đâu:
+  - có phải đường dẫn hệ thống hay không,
+  - có nằm trong đường dẫn có thể ghi bởi người dùng hay không,
+  - chữ ký có hợp lệ/Microsoft hay không.
+- Bắt các commandline có IOC (`rundll32`, `runmalware`, `sysupdatecore.dll`, ...).
+- Có thể bổ sung enrichment từ VirusTotal (tùy chọn) để tăng điểm nếu file/module bị engine bên ngoài đánh dấu.
 
-Registry scanner quet:
+Registry scanner quét:
 
 - `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`
 - `HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce`
-- Startup folder script (`.vbs`)
+- Thư mục Startup (script `.vbs`)
 
-de tim persistence token lien quan side-loading chain.
+để tìm các token persistence liên quan tới chuỗi side-loading.
 
-## Lop C - Mapping ky thuat ATT&CK + phan ung
+### Lớp C - Mapping kỹ thuật ATT&CK và phản ứng
 
-- `technique_mapper.py` suy luan ky thuat (vd `T1574.001`, `T1218.011`, `T1547.001`, ...).
-- Khi vuot nguong block, guardian co the:
-  - stop process map dung path mau,
-  - stop LOLBins pho bien (`rundll32`, `regsvr32`, `fodhelper`) neu lien quan DLL,
-  - quarantine file vao `guardian/quarantine/`,
-  - ghi su kien JSONL trong `guardian/logs/detections.jsonl`.
-
----
-
-## 3) Luong xu ly tong quat
-
-1. Co file moi/thay doi trong thu muc watch.  
-2. `guardian.py` scan + tinh score + tao IOC/reasons.  
-3. `technique_mapper` gan ATT&CK techniques.  
-4. Neu score du nguong: chan + quarantine; neu khong: ghi alert.  
-5. Dashboard doc log va hien thi su kien, IOC, ky thuat, trang thai.
+- `technique_mapper.py` suy luận kỹ thuật (ví dụ `T1574.001`, `T1218.011`, `T1547.001`, ...).
+- Khi vượt ngưỡng block, `guardian` có thể:
+  - dừng process theo đường dẫn mẫu,
+  - chặn các LOLBins phổ biến (`rundll32`, `regsvr32`, `fodhelper`) nếu liên quan DLL,
+  - cách ly (quarantine) file vào `guardian/quarantine/`,
+  - ghi sự kiện ở định dạng JSONL trong `guardian/logs/detections.jsonl`.
 
 ---
 
-## 4) Danh gia chat luong detector
+## 3) Luồng xử lý tổng quát
+
+1. Có file mới/thay đổi trong thư mục watch.
+2. `guardian.py` quét, tính score và tạo IOC/reasons.
+3. `technique_mapper` gán kỹ thuật ATT&CK tương ứng.
+4. Nếu score đủ ngưỡng: chặn + quarantine; nếu không: ghi alert.
+5. Dashboard đọc log và hiển thị sự kiện, IOC, kỹ thuật, trạng thái.
+
+---
+
+## 4) Đánh giá chất lượng detector
 
 Script: `guardian/evaluate_sideload_detector.py`
 
-- Doc manifest mau tu `guardian/eval_manifest_sideload.json`.
-- Chay detector tren bo mau malicious/benign.
-- Tinh chi so:
+- Đọc manifest mẫu từ `guardian/eval_manifest_sideload.json`.
+- Chạy detector trên bộ mẫu malicious/benign.
+- Tính các chỉ số:
   - Precision, Recall, F1, Accuracy,
-  - Technique recall (muc do map dung ATT&CK ky vong).
-- Xuat bao cao:
+  - Technique recall (mức độ map đúng ATT&CK mong đợi).
+- Xuất báo cáo:
   - `guardian/logs/eval_sideload_report.json`
   - `guardian/logs/eval_sideload_report.md`
 
 ---
 
-## 5) Chay nhanh
+## 5) Chạy nhanh
 
-Chay detector o che do canh bao (khong block):
+Chạy detector ở chế độ cảnh báo (không block):
 
 ```powershell
 python .\guardian\guardian.py --dry-run --scan-existing --verbose
 ```
 
-Chay detector o che do block:
+Chạy detector ở chế độ block:
 
 ```powershell
 python .\guardian\guardian.py --scan-existing
 ```
 
-Mo dashboard:
+Mở dashboard:
 
 ```powershell
 python .\guardian\dashboard.py --open-browser
 ```
 
-Danh gia detector:
+Đánh giá detector:
 
 ```powershell
 python .\guardian\evaluate_sideload_detector.py
