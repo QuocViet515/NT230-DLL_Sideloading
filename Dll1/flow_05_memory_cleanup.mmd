@@ -1,0 +1,12 @@
+flowchart LR
+    A["__finally block"] --> B["Destroy crypto key<br/>CryptDestroyKey"]
+    B --> C["Release crypto context<br/>CryptReleaseContext"]
+    C --> D["Wipe decrypted payload<br/>SecureZeroMemory"]
+    D --> E["Free memory<br/>VirtualFree"]
+    E --> F["Signal completion<br/>SetEvent + state update"]
+
+    classDef cleanup fill:#e5e7eb,stroke:#4b5563,stroke-width:2px,color:#111827;
+    classDef sensitive fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#450a0a;
+
+    class A,B,C,E,F cleanup;
+    class D sensitive;

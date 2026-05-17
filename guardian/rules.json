@@ -1,0 +1,168 @@
+{
+  "active_profile": "notepadpp_sideload",
+  "known_sha256": [],
+  "suspicious_filenames": [
+    "winmm.dll",
+    "tmpaf41.dll",
+    "log.dll",
+    "autoupdater.exe"
+  ],
+  "suspicious_strings": [
+    "notepad++",
+    "notepad++.exe",
+    "npp.exe",
+    "winmm.dll",
+    "sideload",
+    "runmalware",
+    "setresilientpersistence",
+    "sysupdatecore.dll",
+    "systemupdate.vbs",
+    "syscheck.vbs",
+    "delegateexecute",
+    "ms-settings\\shell\\open\\command",
+    "fodhelper.exe",
+    "rundll32.exe",
+    "dllregisterserver",
+    "ntprotectvirtualmemory",
+    "cryptdecrypt",
+    "cryptsetkeyparam",
+    "cryptimportkey",
+    "daylakeycuadoannt205hehehehehehehehe",
+    "startup",
+    "csidl_startup"
+  ],
+  "critical_string_groups": [
+    [
+      "ms-settings\\shell\\open\\command",
+      "delegateexecute",
+      "fodhelper.exe"
+    ],
+    [
+      "rundll32.exe",
+      "runmalware",
+      "systemupdate.vbs"
+    ],
+    [
+      "sysupdatecore.dll",
+      "runmalware"
+    ]
+  ],
+  "winmm_proxy_exports": [
+    "mciexecute",
+    "closedriver",
+    "defdriverproc",
+    "drivercallback",
+    "drvgetmodulehandle",
+    "getdrivermodulehandle",
+    "opendriver",
+    "playsound",
+    "playsounda",
+    "playsoundw",
+    "senddrivermessage",
+    "wowappexit",
+    "auxgetdevcapsa",
+    "auxgetdevcapsw",
+    "auxgetnumdevs",
+    "auxgetvolume",
+    "auxoutmessage",
+    "auxsetvolume",
+    "joyconfigchanged",
+    "joygetdevcapsa",
+    "joygetdevcapsw",
+    "joygetnumdevs",
+    "joygetpos",
+    "joygetposex",
+    "joygetthreshold",
+    "joyreleasecapture",
+    "joysetcapture",
+    "joysetthreshold",
+    "mcidrivernotify",
+    "mcidriveryield",
+    "mcifreecommandresource",
+    "mcigetcreatortask",
+    "mcigetdeviceida",
+    "mcigetdeviceidw",
+    "mcigetdriverdata",
+    "mcigeterrorstringa",
+    "mcigeterrorstringw",
+    "mcigetyieldproc",
+    "mciloadcommandresource",
+    "mcisendcommanda",
+    "mcisendcommandw",
+    "mcisendstringa",
+    "mcisendstringw",
+    "mcisetdriverdata",
+    "mcisetyieldproc",
+    "midiinopen",
+    "midioutopen",
+    "midistreamopen",
+    "mixeropen",
+    "mmiogetinfo",
+    "mmioopena",
+    "mmioopenw",
+    "mmioread",
+    "mmiowrite",
+    "mmsystemgetversion",
+    "sndplaysounda",
+    "sndplaysoundw",
+    "timebeginperiod",
+    "timeendperiod",
+    "timegettime",
+    "timesetevent",
+    "waveinopen",
+    "waveoutopen",
+    "waveoutwrite",
+    "dllregisterserver",
+    "runmalware"
+  ],
+  "host_processes": [
+    "notepad++.exe",
+    "npp.exe"
+  ],
+  "target_dlls": [
+    "winmm.dll"
+  ],
+  "expected_system_paths": [
+    "C:\\Windows\\System32\\winmm.dll"
+  ],
+  "trusted_host_path_tokens": [
+    "\\program files\\notepad++\\",
+    "\\program files (x86)\\notepad++\\"
+  ],
+  "user_writable_path_tokens": [
+    "\\users\\",
+    "\\downloads\\",
+    "\\desktop\\",
+    "\\appdata\\",
+    "\\temp\\",
+    "\\onedrive\\"
+  ],
+  "profiles": {
+    "notepadpp_sideload": {
+      "host_processes": [
+        "notepad++.exe",
+        "npp.exe"
+      ],
+      "target_dlls": [
+        "winmm.dll"
+      ],
+      "expected_system_paths": [
+        "C:\\Windows\\System32\\winmm.dll"
+      ],
+      "trusted_host_path_tokens": [
+        "\\program files\\notepad++\\",
+        "\\program files (x86)\\notepad++\\"
+      ],
+      "user_writable_path_tokens": [
+        "\\users\\",
+        "\\downloads\\",
+        "\\desktop\\",
+        "\\appdata\\",
+        "\\temp\\",
+        "\\onedrive\\"
+      ]
+    }
+  },
+  "min_winmm_export_matches": 25,
+  "block_threshold": 70
+}

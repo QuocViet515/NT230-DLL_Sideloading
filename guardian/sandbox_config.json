@@ -1,0 +1,11 @@
+{
+  "vm_name": "CHANGE_ME_VM_NAME",
+  "guest_username": "CHANGE_ME_GUEST_USER",
+  "guest_password": "CHANGE_ME_GUEST_PASSWORD",
+  "guest_drop_dir": "C:\\Users\\Public\\GuardianDrop",
+  "boot_wait_sec": 18,
+  "restore_checkpoint": false,
+  "checkpoint_name": "Clean",
+  "force_stop_before_restore": true
+}
+

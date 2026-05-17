@@ -1,0 +1,34 @@
+{
+  "samples": [
+    {
+      "id": "malicious_dll_proxy",
+      "path": "../x64/Release/Dll1.dll",
+      "label": "malicious",
+      "required": true,
+      "expected_techniques": ["T1574.001", "T1218.011", "T1547.001"],
+      "notes": "PoC DLL side-loading sample"
+    },
+    {
+      "id": "benign_cmd_sample",
+      "path": "eval_samples/benign_hello.cmd",
+      "label": "benign",
+      "required": true,
+      "notes": "Simple benign script"
+    },
+    {
+      "id": "benign_vbs_sample",
+      "path": "eval_samples/benign_hello.vbs",
+      "label": "benign",
+      "required": true,
+      "notes": "Benign VBS with no suspicious launch chain"
+    },
+    {
+      "id": "benign_signed_winmm",
+      "path": "%SystemRoot%/System32/winmm.dll",
+      "label": "benign",
+      "required": false,
+      "notes": "Microsoft-signed system DLL should be allowlisted"
+    }
+  ]
+}
+

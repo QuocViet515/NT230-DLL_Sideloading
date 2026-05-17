@@ -1,0 +1,24 @@
+flowchart LR
+    IA["<b>Initial Access</b><br/><br/>T1566.002<br/>Spearphishing Link"]
+
+    EX["<b>Execution</b><br/><br/>T1204.002<br/>User Execution: Malicious File<br/><br/>T1059.005<br/>Visual Basic<br/><br/>T1106<br/>Native API<br/><br/>T1620<br/>Reflective Code Loading"]
+
+    PE["<b>Persistence</b><br/><br/>T1547.001<br/>Startup Folder"]
+
+    DE["<b>Defense Evasion / Stealth</b><br/><br/>T1574.001<br/>Hijack Execution Flow: DLL<br/><br/>T1218.011<br/>Rundll32<br/><br/>T1027.013<br/>Encrypted/Encoded File<br/><br/>T1140<br/>Deobfuscate/Decode<br/><br/>T1036.005<br/>Masquerading<br/><br/>T1564.003<br/>Hidden Window"]
+
+    C2["<b>Command and Control</b><br/><br/>T1071.001<br/>Web Protocols"]
+
+    IA --> EX --> PE --> DE --> C2
+
+    classDef initial fill:#DBEAFE,stroke:#1D4ED8,color:#172554,stroke-width:4px,font-size:20px;
+    classDef execution fill:#DCFCE7,stroke:#16A34A,color:#052E16,stroke-width:4px,font-size:20px;
+    classDef persistence fill:#FEF3C7,stroke:#D97706,color:#451A03,stroke-width:4px,font-size:20px;
+    classDef evasion fill:#FEE2E2,stroke:#DC2626,color:#450A0A,stroke-width:4px,font-size:20px;
+    classDef command fill:#EDE9FE,stroke:#7C3AED,color:#2E1065,stroke-width:4px,font-size:20px;
+
+    class IA initial;
+    class EX execution;
+    class PE persistence;
+    class DE evasion;
+    class C2 command;

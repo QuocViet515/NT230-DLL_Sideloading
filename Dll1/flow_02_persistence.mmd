@@ -1,0 +1,17 @@
+flowchart LR
+    A["SetResilientPersistence"] --> B["Get current DLL path<br/>GetModuleFileNameA"]
+    B --> C["Get TEMP directory<br/>GetTempPathA"]
+    C --> D["Copy DLL to TEMP<br/>SysUpdateCore.dll"]
+    D --> E["Create VBScript<br/>SysCheck.vbs"]
+    D --> F["Resolve Startup Folder<br/>SHGetFolderPathA"]
+    F --> G["Write Startup script<br/>SystemUpdate.vbs"]
+    G --> H["WScript.Sleep 5000"]
+    H --> I["Run rundll32 hidden<br/>SysUpdateCore.dll,RunMalware"]
+
+    classDef persist fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#451a03;
+    classDef lolbin fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#450a0a;
+    classDef masquerade fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#082f49;
+
+    class A,B,C,E,F,G,H persist;
+    class D masquerade;
+    class I lolbin;

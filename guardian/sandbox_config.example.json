@@ -1,0 +1,11 @@
+{
+  "vm_name": "WinSandbox01",
+  "guest_username": "Admin",
+  "guest_password": "YourStrongPasswordHere",
+  "guest_drop_dir": "C:\\Users\\Public\\GuardianDrop",
+  "boot_wait_sec": 18,
+  "restore_checkpoint": true,
+  "checkpoint_name": "CleanSnapshot",
+  "force_stop_before_restore": true
+}
+
